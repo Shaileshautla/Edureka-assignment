@@ -46,7 +46,7 @@ pipeline {
     stage('Provision Test & Prod (first run safe)') {
       steps {
         sh '''
-          ansible-galaxy collection install community.docker -q
+          ansible-galaxy collection install community.docker
           # Provision both environments; safe to re-run (idempotent)
           ansible-playbook -i ansible/inventories/test/hosts ansible/provision.yml
           ansible-playbook -i ansible/inventories/prod/hosts ansible/provision.yml
