@@ -1,0 +1,6 @@
+app_name: applebite
+container_port: 80
+host_port: 80
+dockerhub_namespace: YOUR_DOCKERHUB_USERNAME
+image_name: applebite
+# image will be docker.io/YOUR_DOCKERHUB_USERNAME/applebite:{{ image_tag }}

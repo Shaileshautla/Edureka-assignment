@@ -1,0 +1,34 @@
+---
+- name: Deploy app container
+  hosts: "{{ target_env | default('test') }}"
+  become: true
+  vars:
+    full_image: "docker.io/{{ dockerhub_namespace }}/{{ image_name }}:{{ image_tag }}"
+  tasks:
+    - name: Pull image
+      community.docker.docker_image:
+        name: "{{ full_image }}"
+        source: pull
+
+    - name: Stop existing container (ignore if not running)
+      community.docker.docker_container:
+        name: "{{ app_name }}"
+        state: stopped
+      ignore_errors: yes
+
+    - name: Remove existing container (ignore if absent)
+      community.docker.docker_container:
+        name: "{{ app_name }}"
+        state: absent
+      ignore_errors: yes
+
+    - name: Run container
+      community.docker.docker_container:
+        name: "{{ app_name }}"
+        image: "{{ full_image }}"
+        state: started
+        restart_policy: always
+        published_ports:
+          - "{{ host_port }}:{{ container_port }}"
+        env:
+          COMMIT_SHA: "{{ image_tag }}"
